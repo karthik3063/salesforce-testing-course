@@ -1,0 +1,1596 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Salesforce testing automation masterclass by Karthik sri datta."
+    />
+    <title>Salesforce Test Automation Masterclass | Karthik sri datta</title>
+    <style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  color-scheme: dark;
+  --bg: #0b0e14;
+  --bg-2: #111520;
+  --bg-3: #161c2a;
+  --card: #1a2235;
+  --card-2: #202a42;
+  --border: #283554;
+  --border-2: #33466e;
+  --text: #e8edf8;
+  --muted: #91a0c2;
+  --dim: #596987;
+  --accent: #4f7eff;
+  --accent-2: #2ec4b6;
+  --gold: #f4b942;
+  --green: #4caf7d;
+  --red: #e05c5c;
+  --mono: "IBM Plex Mono", Consolas, monospace;
+  --serif: "DM Serif Display", Georgia, serif;
+  --sans: Manrope, Arial, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+}
+
+.topbar {
+  align-items: center;
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  height: 58px;
+  justify-content: space-between;
+  padding: 0 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.nav-brand {
+  color: var(--text);
+  font-family: var(--serif);
+  font-size: 1.18rem;
+}
+
+.nav-brand span {
+  color: var(--accent);
+}
+
+.nav-links {
+  align-items: center;
+  display: flex;
+  gap: 0.8rem;
+}
+
+.nav-links button {
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 0.84rem;
+  font-weight: 700;
+  padding: 0.45rem 0.55rem;
+}
+
+.nav-links button:hover,
+.contact-trigger {
+  color: var(--text);
+}
+
+.shell {
+  display: grid;
+  grid-template-columns: 270px minmax(0, 1fr);
+  min-height: calc(100vh - 58px);
+}
+
+.sidebar {
+  background: var(--bg-2);
+  border-right: 1px solid var(--border);
+  height: calc(100vh - 58px);
+  overflow-y: auto;
+  padding: 1.5rem 0;
+  position: sticky;
+  top: 58px;
+}
+
+.sidebar-head {
+  color: var(--dim);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  padding: 0 1.25rem 0.75rem;
+  text-transform: uppercase;
+}
+
+.progress-bar {
+  background: var(--bg-3);
+  border-radius: 999px;
+  height: 5px;
+  margin: 0.45rem 1.25rem 0;
+  overflow: hidden;
+}
+
+.progress-bar span {
+  background: var(--accent);
+  display: block;
+  height: 100%;
+  transition: width 180ms ease;
+  width: 0;
+}
+
+.progress-label {
+  color: var(--dim);
+  font-size: 0.78rem;
+  padding: 0.55rem 1.25rem 1rem;
+}
+
+.module-list {
+  list-style: none;
+}
+
+.module-list li {
+  border-top: 1px solid rgba(40, 53, 84, 0.7);
+}
+
+.module-list li:last-child {
+  border-bottom: 1px solid rgba(40, 53, 84, 0.7);
+}
+
+.module-button {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+  cursor: pointer;
+  display: flex;
+  gap: 0.75rem;
+  min-height: 50px;
+  padding: 0.7rem 1.25rem;
+  text-align: left;
+  transition: background 140ms ease, color 140ms ease;
+  width: 100%;
+}
+
+.module-button:hover {
+  background: var(--bg-3);
+  color: var(--text);
+}
+
+.module-button.is-active {
+  background: rgba(79, 126, 255, 0.11);
+  border-left: 2px solid var(--accent);
+  color: var(--accent);
+}
+
+.module-button span {
+  align-items: center;
+  background: var(--bg-3);
+  border: 1px solid var(--border-2);
+  border-radius: 999px;
+  color: var(--dim);
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  height: 24px;
+  justify-content: center;
+  width: 24px;
+}
+
+.module-button.is-active span {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+main {
+  max-width: 960px;
+  padding: 2.7rem 3rem 3rem;
+}
+
+.content-section {
+  display: none;
+}
+
+.content-section.is-active {
+  display: block;
+}
+
+.hero {
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 3rem;
+  padding-bottom: 2.5rem;
+}
+
+.hero-badge {
+  background: rgba(79, 126, 255, 0.12);
+  border: 1px solid rgba(79, 126, 255, 0.34);
+  border-radius: 999px;
+  color: var(--accent);
+  display: inline-flex;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  margin-bottom: 1.25rem;
+  padding: 0.3rem 0.8rem;
+  text-transform: uppercase;
+}
+
+h1,
+h2 {
+  color: var(--text);
+  font-family: var(--serif);
+  font-weight: 400;
+  line-height: 1.12;
+}
+
+h1 {
+  font-size: clamp(2.5rem, 6vw, 4.4rem);
+  margin-bottom: 0.8rem;
+  max-width: 780px;
+}
+
+h1 em {
+  color: var(--accent);
+}
+
+h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin-bottom: 0.45rem;
+}
+
+h3 {
+  color: var(--text);
+  font-size: 1rem;
+  line-height: 1.35;
+  margin-bottom: 0.5rem;
+}
+
+p {
+  color: var(--muted);
+}
+
+.hero-sub,
+.section-sub {
+  color: var(--muted);
+  font-size: 1rem;
+  max-width: 700px;
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.3rem;
+  margin-top: 2rem;
+}
+
+.stats div {
+  min-width: 90px;
+}
+
+.stats strong {
+  color: var(--accent);
+  display: block;
+  font-family: var(--mono);
+  font-size: 1.8rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.stats span {
+  color: var(--dim);
+  display: block;
+  font-size: 0.8rem;
+  margin-top: 0.35rem;
+}
+
+.course-section {
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+
+.course-section:last-child {
+  border-bottom: 0;
+}
+
+.section-kicker {
+  color: var(--accent-2);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.grid {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.grid.two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid.three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.15rem 1.25rem;
+}
+
+.card p {
+  font-size: 0.91rem;
+}
+
+.contact-card p {
+  overflow-wrap: anywhere;
+}
+
+.insight,
+.warning {
+  border-radius: 8px;
+  margin: 1.4rem 0;
+  padding: 1rem 1.15rem;
+}
+
+.insight {
+  background: rgba(79, 126, 255, 0.08);
+  border: 1px solid rgba(79, 126, 255, 0.26);
+  color: var(--muted);
+}
+
+.warning {
+  background: rgba(244, 185, 66, 0.08);
+  border: 1px solid rgba(244, 185, 66, 0.26);
+  color: var(--muted);
+}
+
+.warning strong {
+  color: var(--gold);
+}
+
+table {
+  border-collapse: collapse;
+  margin: 1.15rem 0;
+  width: 100%;
+}
+
+th,
+td {
+  border: 1px solid var(--border);
+  padding: 0.7rem 0.85rem;
+  text-align: left;
+}
+
+th {
+  background: var(--bg-3);
+  color: var(--muted);
+  font-size: 0.76rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+td {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+td strong {
+  color: var(--text);
+}
+
+.tier-flow {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 1.25rem 0;
+}
+
+.tier {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.tier strong,
+.tier span {
+  display: block;
+}
+
+.tier span {
+  color: var(--accent-2);
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  margin-top: 0.25rem;
+}
+
+.checklist {
+  display: grid;
+  gap: 0.55rem;
+  list-style: none;
+  margin: 1rem 0 1.4rem;
+}
+
+.checklist li {
+  color: var(--muted);
+  display: flex;
+  gap: 0.55rem;
+}
+
+.checklist li::before {
+  color: var(--green);
+  content: ">";
+  font-family: var(--mono);
+  font-weight: 800;
+}
+
+.code-block {
+  background: #0d1117;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin: 1.3rem 0;
+  overflow: hidden;
+}
+
+.code-head {
+  align-items: center;
+  background: var(--bg-3);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  padding: 0.55rem 0.95rem;
+}
+
+.code-head span,
+.code-head button {
+  color: var(--accent-2);
+  font-family: var(--mono);
+  font-size: 0.74rem;
+}
+
+.code-head button {
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.code-head button:hover {
+  color: var(--text);
+}
+
+pre {
+  overflow-x: auto;
+  padding: 1.1rem;
+}
+
+code {
+  color: #d9e3f8;
+  font-family: var(--mono);
+  font-size: 0.86rem;
+  line-height: 1.65;
+}
+
+.steps {
+  display: grid;
+  gap: 1rem;
+  margin: 1.2rem 0;
+}
+
+.steps div {
+  display: flex;
+  gap: 0.9rem;
+}
+
+.steps span {
+  align-items: center;
+  background: var(--accent);
+  border-radius: 999px;
+  color: #fff;
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  height: 28px;
+  justify-content: center;
+  margin-top: 0.1rem;
+  width: 28px;
+}
+
+.qa-item {
+  border-bottom: 1px solid var(--border);
+  padding: 1.2rem 0;
+}
+
+.qa-item:first-child {
+  padding-top: 0;
+}
+
+.qa-item h3::before {
+  color: var(--accent);
+  content: "Q: ";
+  font-family: var(--mono);
+}
+
+.qa-item p::before {
+  color: var(--accent-2);
+  content: "A: ";
+  font-family: var(--mono);
+  font-weight: 700;
+}
+
+.quiz-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.quiz-question {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.quiz-question button {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--muted);
+  cursor: pointer;
+  display: block;
+  margin-top: 0.5rem;
+  padding: 0.6rem 0.8rem;
+  text-align: left;
+  width: 100%;
+}
+
+.quiz-question button:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.quiz-question button.is-correct {
+  background: rgba(76, 175, 125, 0.1);
+  border-color: var(--green);
+  color: var(--green);
+}
+
+.quiz-question button.is-wrong {
+  background: rgba(224, 92, 92, 0.1);
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.score {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 1rem;
+  padding: 1rem;
+}
+
+.nav-footer {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2.5rem;
+}
+
+.nav-button {
+  background: var(--card);
+  border: 1px solid var(--border-2);
+  border-radius: 8px;
+  color: var(--muted);
+  cursor: pointer;
+  font-weight: 700;
+  min-height: 42px;
+  padding: 0 1.1rem;
+}
+
+.nav-button:hover {
+  background: var(--card-2);
+  color: var(--text);
+}
+
+.nav-button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.contact-section {
+  max-width: 760px;
+}
+
+footer {
+  background: var(--bg-2);
+  border-top: 1px solid var(--border);
+  color: var(--dim);
+  font-size: 0.84rem;
+  padding: 1.2rem 2rem;
+  text-align: center;
+}
+
+footer strong {
+  color: var(--muted);
+}
+
+@media (max-width: 900px) {
+  .topbar {
+    align-items: flex-start;
+    flex-direction: column;
+    height: auto;
+    padding: 1rem;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+  }
+
+  .shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    height: auto;
+    position: static;
+  }
+
+  .module-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  main {
+    padding: 1.5rem;
+  }
+
+  .grid.two,
+  .grid.three,
+  .tier-flow {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .module-list {
+    grid-template-columns: 1fr;
+  }
+
+  .stats {
+    gap: 1.2rem;
+  }
+
+  .nav-footer {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}
+
+</style>
+  </head>
+  <body>
+    <nav class="topbar">
+      <a class="nav-brand" href="#" data-section-link="sec0">Karthik <span>Sri Datta</span></a>
+      <div class="nav-links" aria-label="Top navigation">
+        <button type="button" data-section-link="sec0">Home</button>
+        <button type="button" data-section-link="sec8">Interview</button>
+        <button type="button" data-section-link="sec9">Quiz</button>
+        <button class="contact-trigger" type="button" data-section-link="sec10">
+          Contact
+        </button>
+      </div>
+    </nav>
+
+    <div class="shell">
+      <aside class="sidebar">
+        <div class="sidebar-head">Course Progress</div>
+        <div class="progress-bar"><span id="progressFill"></span></div>
+        <p class="progress-label" id="progressLabel">1 / 11 sections opened</p>
+
+        <ul class="module-list">
+          <li><button class="module-button is-active" type="button" data-section-link="sec0"><span>0</span>Course Overview</button></li>
+          <li><button class="module-button" type="button" data-section-link="sec1"><span>1</span>Salesforce Platform</button></li>
+          <li><button class="module-button" type="button" data-section-link="sec2"><span>2</span>QA Domain Knowledge</button></li>
+          <li><button class="module-button" type="button" data-section-link="sec3"><span>3</span>UI Automation</button></li>
+          <li><button class="module-button" type="button" data-section-link="sec4"><span>4</span>Java Test Framework</button></li>
+          <li><button class="module-button" type="button" data-section-link="sec5"><span>5</span>BDD with Cucumber</button></li>
+          <li><button class="module-button" type="button" data-section-link="sec6"><span>6</span>API Testing</button></li>
+          <li><button class="module-button" type="button" data-section-link="sec7"><span>7</span>CI/CD Reporting</button></li>
+          <li><button class="module-button" type="button" data-section-link="sec8"><span>8</span>Interview Q&amp;A</button></li>
+          <li><button class="module-button" type="button" data-section-link="sec9"><span>9</span>Final Quiz</button></li>
+          <li><button class="module-button contact-side" type="button" data-section-link="sec10"><span>+</span>Contact</button></li>
+        </ul>
+      </aside>
+
+      <main>
+        <section class="content-section is-active" id="sec0">
+          <div class="hero">
+            <p class="hero-badge">SDET Masterclass</p>
+            <h1>Salesforce Test <em>Automation</em> Guide</h1>
+            <p class="hero-sub">
+              A complete self-learning course for Salesforce QA automation:
+              platform basics, sandbox strategy, UI automation, Java framework
+              design, BDD, REST API validation, CI/CD, interview preparation,
+              and final assessment. Authored by <strong>Karthik sri datta</strong>.
+            </p>
+            <div class="stats">
+              <div><strong>9</strong><span>Modules</span></div>
+              <div><strong>55+</strong><span>Concept Blocks</span></div>
+              <div><strong>20</strong><span>Practice Tasks</span></div>
+              <div><strong>10</strong><span>Quiz Questions</span></div>
+            </div>
+          </div>
+
+          <div class="course-section">
+            <p class="section-kicker">What you will learn</p>
+            <h2>Full Curriculum Overview</h2>
+            <div class="grid two">
+              <article class="card">
+                <h3>Platform Architecture</h3>
+                <p>
+                  Learn Salesforce as a SaaS and PaaS platform, including
+                  standard objects, metadata-driven UI, record types, page
+                  layouts, and CRM lifecycle testing.
+                </p>
+              </article>
+              <article class="card">
+                <h3>QA Domain Expertise</h3>
+                <p>
+                  Understand sandbox types, profiles, permission sets, field
+                  security, sharing rules, validation rules, flows, and release
+                  cycles from a tester's point of view.
+                </p>
+              </article>
+              <article class="card">
+                <h3>UI Automation Patterns</h3>
+                <p>
+                  Design stable automation for Lightning forms, lookup fields,
+                  modals, related lists, toast messages, iframes, dynamic DOM,
+                  and slow asynchronous saves.
+                </p>
+              </article>
+              <article class="card">
+                <h3>Framework and Delivery</h3>
+                <p>
+                  Build page objects, data factories, API helpers, reports,
+                  tagged suites, CI pipelines, and a release smoke pack that a
+                  real QA team can maintain.
+                </p>
+              </article>
+            </div>
+            <div class="insight">
+              <strong>Who this is for:</strong> QA engineers, freshers, manual
+              testers, and SDETs who want Salesforce testing automation knowledge
+              visible in one course page instead of hidden behind registration.
+            </div>
+          </div>
+          <div class="nav-footer">
+            <span></span>
+            <button class="nav-button primary" type="button" data-section-link="sec1">Start Module 1</button>
+          </div>
+        </section>
+
+        <section class="content-section" id="sec1">
+          <p class="section-kicker">Module 1</p>
+          <h2>Salesforce Platform Fundamentals</h2>
+          <p class="section-sub">Before writing tests, understand what Salesforce is doing underneath the UI.</p>
+
+          <div class="course-section">
+            <h3>1.1 What is Salesforce?</h3>
+            <p>
+              Salesforce is a cloud CRM platform used to manage sales, service,
+              marketing, support, and custom business workflows. For testers, the
+              important part is that Salesforce behavior is produced by a mix of
+              data, metadata, permissions, declarative automation, and custom
+              code.
+            </p>
+            <div class="grid two">
+              <article class="card">
+                <h3>SaaS Layer</h3>
+                <p>
+                  Ready-to-use applications such as Sales Cloud and Service
+                  Cloud. QA focuses on business journeys like lead conversion,
+                  opportunity stages, case routing, approvals, and reports.
+                </p>
+              </article>
+              <article class="card">
+                <h3>PaaS Layer</h3>
+                <p>
+                  Custom objects, Apex, Lightning Web Components, Flows,
+                  validation rules, and integrations. QA validates both visible
+                  UI behavior and hidden record side effects.
+                </p>
+              </article>
+            </div>
+
+            <h3>1.2 Standard Objects and QA Focus</h3>
+            <table>
+              <thead>
+                <tr><th>Object</th><th>Business Role</th><th>QA Focus</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>Lead</strong></td><td>Raw prospect</td><td>Create, validate, convert, duplicate checks</td></tr>
+                <tr><td><strong>Account</strong></td><td>Company or customer</td><td>Hierarchy, ownership, related contacts</td></tr>
+                <tr><td><strong>Contact</strong></td><td>Person linked to account</td><td>Required fields, duplicate rules, relationships</td></tr>
+                <tr><td><strong>Opportunity</strong></td><td>Sales deal</td><td>Stage changes, amount, close date, approvals</td></tr>
+                <tr><td><strong>Case</strong></td><td>Support ticket</td><td>Assignment rules, SLA, status flow, queues</td></tr>
+              </tbody>
+            </table>
+            <div class="insight">
+              <strong>Testing rule:</strong> Always connect a UI step to a
+              business result. A successful click is not enough; verify the
+              record, relationship, status, owner, or downstream effect.
+            </div>
+
+            <h3>1.3 Salesforce Automation Flow Example</h3>
+            <p>
+              A real Salesforce test usually crosses multiple layers. In a Lead
+              conversion journey, the tester creates a Lead, qualifies it,
+              converts it, and then validates that Salesforce created the
+              Account, Contact, and optionally Opportunity records correctly.
+              The UI may show only a success message, but the real business
+              proof is in the related records and field values.
+            </p>
+            <div class="grid three">
+              <article class="card">
+                <h3>Arrange</h3>
+                <p>Create a Lead with required fields such as company, last name, lead source, status, and owner.</p>
+              </article>
+              <article class="card">
+                <h3>Act</h3>
+                <p>Open the Lead as a sales user, click Convert, choose conversion options, and confirm.</p>
+              </article>
+              <article class="card">
+                <h3>Assert</h3>
+                <p>Verify converted status, Account, Contact, Opportunity, owner, and any automation-created task.</p>
+              </article>
+            </div>
+
+            <h3>1.4 Metadata Concepts Testers Must Know</h3>
+            <table>
+              <thead>
+                <tr><th>Concept</th><th>Meaning</th><th>Testing Impact</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>Record Type</strong></td><td>Different business process for same object</td><td>Fields, picklists, layouts, and automation can change by record type</td></tr>
+                <tr><td><strong>Page Layout</strong></td><td>Controls field placement and visibility</td><td>UI tests must handle layout differences by profile or app</td></tr>
+                <tr><td><strong>Validation Rule</strong></td><td>Blocks invalid save operations</td><td>Automation should test both allowed and blocked scenarios</td></tr>
+                <tr><td><strong>Flow</strong></td><td>Declarative automation</td><td>May update records after save, route approvals, or create tasks</td></tr>
+                <tr><td><strong>Apex Trigger</strong></td><td>Code running on data events</td><td>Side effects often need API or database-level validation</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="nav-footer">
+            <button class="nav-button" type="button" data-section-link="sec0">Overview</button>
+            <button class="nav-button primary" type="button" data-section-link="sec2">Module 2</button>
+          </div>
+        </section>
+
+        <section class="content-section" id="sec2">
+          <p class="section-kicker">Module 2</p>
+          <h2>Core QA Domain Knowledge</h2>
+          <p class="section-sub">Know the environment, users, permissions, and data model before automation begins.</p>
+
+          <div class="course-section">
+            <h3>2.1 Sandbox Strategy</h3>
+            <div class="tier-flow">
+              <div class="tier"><strong>Developer</strong><span>Feature smoke</span></div>
+              <div class="tier"><strong>Dev Pro</strong><span>Small integration</span></div>
+              <div class="tier"><strong>Partial Copy</strong><span>Daily regression</span></div>
+              <div class="tier"><strong>Full Sandbox</strong><span>Pre-release validation</span></div>
+            </div>
+            <p>
+              Choose the sandbox by test purpose. Developer sandboxes are fast
+              and isolated, but their data is limited. Partial Copy sandboxes are
+              useful for CI regression because they contain realistic sample
+              data. Full sandboxes are expensive and should be used for staging,
+              release rehearsal, and high-confidence validation.
+            </p>
+
+            <h3>2.2 Security Layers</h3>
+            <div class="grid three">
+              <article class="card"><h3>Profile</h3><p>Base permissions, object access, app access, and field-level security.</p></article>
+              <article class="card"><h3>Permission Set</h3><p>Extra access assigned without changing a user's base profile.</p></article>
+              <article class="card"><h3>Sharing Rule</h3><p>Controls which records a user can see after object access is granted.</p></article>
+            </div>
+            <div class="warning">
+              <strong>Common defect:</strong> A test passes as admin but fails
+              for a standard user. Persona-based automation is mandatory for
+              Salesforce projects.
+            </div>
+
+            <h3>2.3 Persona-Based Test Matrix</h3>
+            <p>
+              Salesforce teams usually test the same feature with different
+              personas because each user can see different apps, tabs, fields,
+              buttons, list views, and records. A good automation suite does not
+              only run as System Administrator.
+            </p>
+            <table>
+              <thead>
+                <tr><th>Persona</th><th>Example Checks</th><th>Automation Risk</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>Sales Rep</strong></td><td>Create Lead, update Opportunity, log activity</td><td>Cannot see manager-only fields or reports</td></tr>
+                <tr><td><strong>Sales Manager</strong></td><td>Approve discounts, view team pipeline</td><td>Needs role hierarchy and sharing data</td></tr>
+                <tr><td><strong>Support Agent</strong></td><td>Accept Case, change status, add comments</td><td>Queue assignment and service console behavior</td></tr>
+                <tr><td><strong>Admin</strong></td><td>Setup validation, metadata visibility</td><td>Too much access can hide real permission defects</td></tr>
+              </tbody>
+            </table>
+
+            <h3>2.4 Release and Regression Planning</h3>
+            <ul class="checklist">
+              <li>Run smoke tests after every deployment to validate critical business paths.</li>
+              <li>Run regression tests nightly or before major UAT handoff.</li>
+              <li>Track metadata changes such as fields, flows, layouts, and permission sets.</li>
+              <li>Keep test records tagged with a run ID so failures can be traced quickly.</li>
+            </ul>
+          </div>
+          <div class="nav-footer">
+            <button class="nav-button" type="button" data-section-link="sec1">Module 1</button>
+            <button class="nav-button primary" type="button" data-section-link="sec3">Module 3</button>
+          </div>
+        </section>
+
+        <section class="content-section" id="sec3">
+          <p class="section-kicker">Module 3</p>
+          <h2>Salesforce UI Automation</h2>
+          <p class="section-sub">Build reliable browser automation for Lightning pages without depending on fragile generated IDs.</p>
+
+          <div class="course-section">
+            <h3>3.1 Lightning Challenges</h3>
+            <ul class="checklist">
+              <li>Dynamic component rendering and delayed page hydration.</li>
+              <li>Generated element IDs that change between sessions.</li>
+              <li>Lookup fields, comboboxes, modals, tabs, and related lists.</li>
+              <li>Background flows and triggers that update records after save.</li>
+            </ul>
+            <div class="code-block">
+              <div class="code-head"><span>Java - stable wait pattern</span><button type="button" data-copy-code>Copy</button></div>
+              <pre><code>WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+
+WebElement toast = wait.until(ExpectedConditions.visibilityOfElementLocated(
+    By.xpath("//span[contains(@class,'toastMessage')]")
+));
+
+assertTrue(toast.getText().contains("saved"));</code></pre>
+            </div>
+            <h3>3.2 Selector Principles</h3>
+            <p>
+              Prefer accessible names, labels, button text, stable custom test
+              attributes, and business-visible values. Avoid absolute XPath,
+              generated IDs, and position-based selectors because Salesforce
+              metadata changes can reorder fields and components.
+            </p>
+
+            <h3>3.3 Common Lightning Components</h3>
+            <table>
+              <thead>
+                <tr><th>Component</th><th>Automation Approach</th><th>Validation Example</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>Lookup</strong></td><td>Search by visible label, select result text</td><td>Account lookup shows selected account pill</td></tr>
+                <tr><td><strong>Combobox</strong></td><td>Open dropdown, select visible option</td><td>Opportunity Stage changes to Proposal</td></tr>
+                <tr><td><strong>Toast</strong></td><td>Wait for visible success or error message</td><td>Record saved confirmation appears</td></tr>
+                <tr><td><strong>Related List</strong></td><td>Wait for row with expected related record</td><td>Converted Contact appears under Account</td></tr>
+                <tr><td><strong>Modal</strong></td><td>Scope selectors inside modal container</td><td>New Case modal saves and closes</td></tr>
+              </tbody>
+            </table>
+
+            <h3>3.4 Example UI Scenarios</h3>
+            <div class="grid two">
+              <article class="card">
+                <h3>Lead Conversion Smoke</h3>
+                <p>
+                  Open a prepared Lead, convert it, confirm success toast, then
+                  validate Account and Contact creation through UI and API.
+                </p>
+              </article>
+              <article class="card">
+                <h3>Case Status Regression</h3>
+                <p>
+                  Create a Case, assign queue, move status from New to Working
+                  to Closed, and verify SLA fields and history tracking.
+                </p>
+              </article>
+            </div>
+          </div>
+          <div class="nav-footer">
+            <button class="nav-button" type="button" data-section-link="sec2">Module 2</button>
+            <button class="nav-button primary" type="button" data-section-link="sec4">Module 4</button>
+          </div>
+        </section>
+
+        <section class="content-section" id="sec4">
+          <p class="section-kicker">Module 4</p>
+          <h2>Java Test Framework Design</h2>
+          <p class="section-sub">Organize tests so they read like business flows and scale across teams.</p>
+
+          <div class="course-section">
+            <div class="grid two">
+              <article class="card">
+                <h3>Page Object Model</h3>
+                <p>
+                  Put repeated UI operations into focused page or component
+                  classes: LoginPage, AppLauncher, LeadPage, RecordModal,
+                  ToastMessage, and RelatedList.
+                </p>
+              </article>
+              <article class="card">
+                <h3>Test Data Factory</h3>
+                <p>
+                  Generate unique leads, accounts, cases, and opportunities with
+                  predictable fields and a run ID for cleanup and debugging.
+                </p>
+              </article>
+            </div>
+            <div class="code-block">
+              <div class="code-head"><span>Suggested project structure</span><button type="button" data-copy-code>Copy</button></div>
+              <pre><code>src/test/java
+  tests/smoke
+  tests/regression
+  pages/lightning
+  components
+  services/salesforce
+  data/factory
+  listeners
+  reports</code></pre>
+            </div>
+            <ul class="checklist">
+              <li>Keep test names focused on business scenarios.</li>
+              <li>Use TestNG groups for smoke, regression, api, and release.</li>
+              <li>Capture screenshots and logs on every failure.</li>
+              <li>Never share WebDriver state across parallel tests.</li>
+            </ul>
+
+            <h3>4.1 Framework Layers</h3>
+            <table>
+              <thead>
+                <tr><th>Layer</th><th>Responsibility</th><th>Example</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>Test</strong></td><td>Business scenario and assertions</td><td>convertQualifiedLeadCreatesOpportunity()</td></tr>
+                <tr><td><strong>Page</strong></td><td>Screen-level actions</td><td>LeadPage.clickConvert()</td></tr>
+                <tr><td><strong>Component</strong></td><td>Reusable Lightning widgets</td><td>Lookup.select("Acme")</td></tr>
+                <tr><td><strong>Service</strong></td><td>API setup and validation</td><td>SalesforceApi.createAccount()</td></tr>
+                <tr><td><strong>Factory</strong></td><td>Data object creation</td><td>LeadFactory.qualifiedLead()</td></tr>
+              </tbody>
+            </table>
+
+            <div class="code-block">
+              <div class="code-head"><span>Java - readable business test</span><button type="button" data-copy-code>Copy</button></div>
+              <pre><code>@Test(groups = {"smoke", "sales"})
+public void convertQualifiedLeadCreatesOpportunity() {
+    Lead lead = leadFactory.createQualifiedLead();
+
+    leadPage.open(lead.id());
+    leadPage.convertLead();
+
+    assertThat(api.getLead(lead.id()).isConverted()).isTrue();
+    assertThat(api.findOpportunityByLead(lead.id())).isPresent();
+}</code></pre>
+            </div>
+          </div>
+          <div class="nav-footer">
+            <button class="nav-button" type="button" data-section-link="sec3">Module 3</button>
+            <button class="nav-button primary" type="button" data-section-link="sec5">Module 5</button>
+          </div>
+        </section>
+
+        <section class="content-section" id="sec5">
+          <p class="section-kicker">Module 5</p>
+          <h2>BDD with Cucumber</h2>
+          <p class="section-sub">Write feature files that document Salesforce behavior without hiding test logic.</p>
+
+          <div class="course-section">
+            <p>
+              BDD is useful when business analysts, admins, QA engineers, and
+              developers need one shared language. Good feature files describe
+              the business rule; step definitions perform the automation.
+            </p>
+            <div class="code-block">
+              <div class="code-head"><span>Gherkin - lead conversion</span><button type="button" data-copy-code>Copy</button></div>
+              <pre><code>Feature: Lead conversion
+
+  @smoke @sales
+  Scenario: Convert a qualified lead into account and opportunity
+    Given a qualified lead exists
+    When the sales user converts the lead
+    Then an account should be created
+    And an opportunity should be linked to the account</code></pre>
+            </div>
+            <div class="grid three">
+              <article class="card"><h3>@smoke</h3><p>Runs before release or deployment for critical paths.</p></article>
+              <article class="card"><h3>@regression</h3><p>Runs broader business workflows, usually nightly.</p></article>
+              <article class="card"><h3>@persona</h3><p>Runs the same feature as admin, manager, or standard user.</p></article>
+            </div>
+
+            <h3>5.1 Step Definition Design</h3>
+            <p>
+              Step definitions should call page objects and services, not
+              contain long Selenium code directly. This keeps the Gherkin
+              readable and keeps automation logic reusable across scenarios.
+            </p>
+            <div class="code-block">
+              <div class="code-head"><span>Java - Cucumber step definition</span><button type="button" data-copy-code>Copy</button></div>
+              <pre><code>@Given("a qualified lead exists")
+public void qualifiedLeadExists() {
+    testContext.lead = leadFactory.createQualifiedLead();
+}
+
+@When("the sales user converts the lead")
+public void salesUserConvertsLead() {
+    leadPage.open(testContext.lead.id());
+    leadPage.convertLead();
+}</code></pre>
+            </div>
+
+            <h3>5.2 Good Feature File Rules</h3>
+            <ul class="checklist">
+              <li>Use business language, not locator or button implementation details.</li>
+              <li>Keep Background steps short and only for shared context.</li>
+              <li>Use Scenario Outline for repeated record types or personas.</li>
+              <li>Use tags to control CI execution instead of separate duplicate feature files.</li>
+            </ul>
+          </div>
+          <div class="nav-footer">
+            <button class="nav-button" type="button" data-section-link="sec4">Module 4</button>
+            <button class="nav-button primary" type="button" data-section-link="sec6">Module 6</button>
+          </div>
+        </section>
+
+        <section class="content-section" id="sec6">
+          <p class="section-kicker">Module 6</p>
+          <h2>API Testing and Test Data</h2>
+          <p class="section-sub">Use API setup and validation to make UI tests faster, cleaner, and more reliable.</p>
+
+          <div class="course-section">
+            <h3>6.1 API-First Data Setup</h3>
+            <p>
+              UI automation should not spend most of its time creating
+              prerequisite data. Use Salesforce REST API or backend helpers to
+              create records, then use the UI only for the journey being tested.
+            </p>
+            <div class="code-block">
+              <div class="code-head"><span>REST Assured - create account</span><button type="button" data-copy-code>Copy</button></div>
+              <pre><code>given()
+  .header("Authorization", "Bearer " + accessToken)
+  .contentType("application/json")
+  .body(Map.of("Name", "AUTO_QA_Account"))
+.when()
+  .post(instanceUrl + "/services/data/v60.0/sobjects/Account")
+.then()
+  .statusCode(201);</code></pre>
+            </div>
+            <div class="insight">
+              <strong>Pattern:</strong> Arrange through API, act through UI,
+              assert through UI and API. This keeps browser time focused on the
+              behavior users actually perform.
+            </div>
+
+            <h3>6.2 Salesforce API Validations</h3>
+            <p>
+              API checks are especially useful when a UI action triggers hidden
+              automation. For example, closing an Opportunity can create a task,
+              update forecast fields, notify an integration, or change approval
+              status. The UI may not show all of those changes immediately.
+            </p>
+            <table>
+              <thead>
+                <tr><th>UI Action</th><th>API Validation</th><th>Why It Matters</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Convert Lead</td><td>Query Account, Contact, Opportunity</td><td>Confirms full conversion result</td></tr>
+                <tr><td>Close Case</td><td>Query Status, ClosedDate, OwnerId</td><td>Confirms service workflow completed</td></tr>
+                <tr><td>Submit Approval</td><td>Query ProcessInstance</td><td>Confirms approval process started</td></tr>
+                <tr><td>Update Opportunity Stage</td><td>Query StageName and ForecastCategory</td><td>Confirms sales reporting data</td></tr>
+              </tbody>
+            </table>
+
+            <div class="code-block">
+              <div class="code-head"><span>SOQL - validate converted lead</span><button type="button" data-copy-code>Copy</button></div>
+              <pre><code>SELECT Id, IsConverted, ConvertedAccountId, ConvertedContactId,
+       ConvertedOpportunityId
+FROM Lead
+WHERE Id = '00QXXXXXXXXXXXX'</code></pre>
+            </div>
+          </div>
+          <div class="nav-footer">
+            <button class="nav-button" type="button" data-section-link="sec5">Module 5</button>
+            <button class="nav-button primary" type="button" data-section-link="sec7">Module 7</button>
+          </div>
+        </section>
+
+        <section class="content-section" id="sec7">
+          <p class="section-kicker">Module 7</p>
+          <h2>CI/CD and Reporting</h2>
+          <p class="section-sub">Turn local automation into release feedback your team can trust.</p>
+
+          <div class="course-section">
+            <h3>7.1 Pipeline Stages</h3>
+            <div class="steps">
+              <div><span>1</span><p><strong>Checkout and build.</strong> Pull the test framework and compile dependencies.</p></div>
+              <div><span>2</span><p><strong>Validate secrets.</strong> Confirm org URL, username, token, and connected app config.</p></div>
+              <div><span>3</span><p><strong>Run tagged suites.</strong> Execute smoke on deployment candidates and regression nightly.</p></div>
+              <div><span>4</span><p><strong>Publish artifacts.</strong> Store reports, screenshots, logs, and record IDs.</p></div>
+            </div>
+            <div class="code-block">
+              <div class="code-head"><span>Jenkinsfile - simple stages</span><button type="button" data-copy-code>Copy</button></div>
+              <pre><code>pipeline {
+  agent any
+  stages {
+    stage('Build') { steps { sh 'mvn clean compile' } }
+    stage('API') { steps { sh 'mvn test -Dgroups=api' } }
+    stage('Smoke') { steps { sh 'mvn test -Dgroups=smoke' } }
+  }
+  post {
+    always {
+      junit 'target/surefire-reports/*.xml'
+      archiveArtifacts 'target/screenshots/**'
+    }
+  }
+}</code></pre>
+            </div>
+
+            <h3>7.2 Report Triage Workflow</h3>
+            <p>
+              A good report should help the team decide what happened without
+              rerunning the test immediately. Store the current user, org URL,
+              record IDs, screenshot, console logs, API response summary, and
+              exact suite tag. Failures should be classified as product defect,
+              environment issue, data issue, or automation defect.
+            </p>
+            <div class="grid two">
+              <article class="card">
+                <h3>Release Gate</h3>
+                <p>
+                  Block deployment when a critical smoke flow fails: login,
+                  lead conversion, case routing, approval, or payment-related
+                  integration.
+                </p>
+              </article>
+              <article class="card">
+                <h3>Quarantine Rule</h3>
+                <p>
+                  A flaky test can be temporarily quarantined only with an owner,
+                  ticket, reason, and target fix date. Do not silently ignore it.
+                </p>
+              </article>
+            </div>
+          </div>
+          <div class="nav-footer">
+            <button class="nav-button" type="button" data-section-link="sec6">Module 6</button>
+            <button class="nav-button primary" type="button" data-section-link="sec8">Module 8</button>
+          </div>
+        </section>
+
+        <section class="content-section" id="sec8">
+          <p class="section-kicker">Module 8</p>
+          <h2>Interview Q&amp;A</h2>
+          <p class="section-sub">Short answers for Salesforce QA automation interviews.</p>
+
+          <div class="course-section">
+            <div class="qa-item">
+              <h3>What makes Salesforce automation different from normal web automation?</h3>
+              <p>
+                Salesforce uses metadata-driven screens, dynamic Lightning
+                components, permissions, record types, background automation,
+                and org-specific configuration. Tests need stable waits,
+                role-based coverage, API setup, and business-state assertions.
+              </p>
+            </div>
+            <div class="qa-item">
+              <h3>How do you reduce flaky Salesforce UI tests?</h3>
+              <p>
+                Wait for visible business states, avoid generated IDs, isolate
+                data, run tests with dedicated users, capture artifacts, and
+                classify failures as product, environment, or automation issues.
+              </p>
+            </div>
+            <div class="qa-item">
+              <h3>Why use API seeding?</h3>
+              <p>
+                API seeding creates prerequisite records quickly and reliably,
+                leaving browser automation to validate the user workflow. It
+                also makes data setup more traceable through run IDs.
+              </p>
+            </div>
+            <div class="qa-item">
+              <h3>How do you design release smoke tests?</h3>
+              <p>
+                Keep them short and critical: login, navigation, record create,
+                update, approval or conversion path, and API validation. Smoke
+                suites should block releases only when the failure matters.
+              </p>
+            </div>
+            <div class="qa-item">
+              <h3>How do record types affect automation?</h3>
+              <p>
+                Record types can change picklist values, page layouts, required
+                fields, business processes, and automation paths. Test data
+                factories should explicitly create records with the correct
+                record type instead of relying on user defaults.
+              </p>
+            </div>
+            <div class="qa-item">
+              <h3>How do you test validation rules?</h3>
+              <p>
+                Create both positive and negative cases. A positive test saves a
+                valid record successfully. A negative test enters invalid data
+                and verifies the exact field-level or page-level error message
+                without creating a record.
+              </p>
+            </div>
+            <div class="qa-item">
+              <h3>How do you handle Salesforce flows in testing?</h3>
+              <p>
+                Treat flows as business automation. Verify the trigger
+                condition, the changed fields, created related records, emails,
+                approval routing, or assignment behavior. Use API queries when
+                the flow result is not fully visible in the UI.
+              </p>
+            </div>
+            <div class="qa-item">
+              <h3>What should be included in a Salesforce automation failure log?</h3>
+              <p>
+                Include org URL, user persona, test run ID, record IDs, current
+                page URL, screenshot, browser logs, API response summaries, and
+                the metadata or permission set assumptions for that test.
+              </p>
+            </div>
+          </div>
+          <div class="nav-footer">
+            <button class="nav-button" type="button" data-section-link="sec7">Module 7</button>
+            <button class="nav-button primary" type="button" data-section-link="sec9">Final Quiz</button>
+          </div>
+        </section>
+
+        <section class="content-section" id="sec9">
+          <p class="section-kicker">Module 9</p>
+          <h2>Final Assessment Quiz</h2>
+          <p class="section-sub">Click an answer to check it. Your score updates instantly.</p>
+
+          <div class="course-section quiz-list">
+            <article class="quiz-question">
+              <h3>Which sandbox is usually best for daily CI regression with realistic sample data?</h3>
+              <button type="button" data-answer="wrong">Developer Sandbox</button>
+              <button type="button" data-answer="correct">Partial Copy Sandbox</button>
+              <button type="button" data-answer="wrong">Production Org</button>
+            </article>
+            <article class="quiz-question">
+              <h3>What should a Salesforce UI test verify after clicking Save?</h3>
+              <button type="button" data-answer="wrong">Only that the button was clicked</button>
+              <button type="button" data-answer="correct">Toast, record state, and expected field values</button>
+              <button type="button" data-answer="wrong">Only the page URL</button>
+            </article>
+            <article class="quiz-question">
+              <h3>Which layer controls field visibility for a user?</h3>
+              <button type="button" data-answer="correct">Profile or permission set field-level security</button>
+              <button type="button" data-answer="wrong">Browser cache</button>
+              <button type="button" data-answer="wrong">TestNG group</button>
+            </article>
+            <article class="quiz-question">
+              <h3>What is the best reason to use API setup in UI automation?</h3>
+              <button type="button" data-answer="wrong">To avoid validating the UI</button>
+              <button type="button" data-answer="correct">To create prerequisite records quickly and reliably</button>
+              <button type="button" data-answer="wrong">To skip authentication permanently</button>
+            </article>
+            <article class="quiz-question">
+              <h3>Why should automation avoid generated Salesforce element IDs?</h3>
+              <button type="button" data-answer="correct">They can change across sessions, metadata changes, and releases</button>
+              <button type="button" data-answer="wrong">They are always hidden from the browser</button>
+              <button type="button" data-answer="wrong">They only work for admin users</button>
+            </article>
+            <article class="quiz-question">
+              <h3>Which Salesforce concept can change picklist values and page layout for the same object?</h3>
+              <button type="button" data-answer="wrong">Jenkins stage</button>
+              <button type="button" data-answer="correct">Record Type</button>
+              <button type="button" data-answer="wrong">Browser viewport</button>
+            </article>
+            <article class="quiz-question">
+              <h3>What is the strongest assertion after lead conversion?</h3>
+              <button type="button" data-answer="wrong">The Convert button disappeared</button>
+              <button type="button" data-answer="wrong">The page refreshed</button>
+              <button type="button" data-answer="correct">Lead is converted and related Account, Contact, and Opportunity are created as expected</button>
+            </article>
+            <article class="quiz-question">
+              <h3>What should happen to a flaky test in a release suite?</h3>
+              <button type="button" data-answer="wrong">Ignore it permanently</button>
+              <button type="button" data-answer="correct">Quarantine it with owner, ticket, reason, and fix date</button>
+              <button type="button" data-answer="wrong">Delete the report artifacts</button>
+            </article>
+            <p class="score" id="scoreDisplay">Score: 0 / 0</p>
+            <button class="nav-button" type="button" id="resetQuiz">Restart Quiz</button>
+          </div>
+          <div class="nav-footer">
+            <button class="nav-button" type="button" data-section-link="sec8">Module 8</button>
+            <button class="nav-button primary" type="button" data-section-link="sec10">Contact</button>
+          </div>
+        </section>
+
+        <section class="content-section contact-section" id="sec10">
+          <p class="section-kicker">Contact</p>
+          <h2>Contact Karthik sri datta</h2>
+          <p class="section-sub">
+            Contact details are shown only on this page after the Contact option
+            is selected.
+          </p>
+
+          <div class="course-section">
+            <div class="grid two">
+              <article class="card contact-card">
+                <h3>Email</h3>
+                <p><a href="mailto:karthik.konda2002@gmail.com">karthik.konda2002@gmail.com</a></p>
+              </article>
+              <article class="card contact-card">
+                <h3>LinkedIn</h3>
+                <p>
+                  <a href="https://www.linkedin.com/in/karthik-sri-datta-konda-439a14238" target="_blank" rel="noreferrer">
+                    linkedin.com/in/karthik-sri-datta-konda-439a14238
+                  </a>
+                </p>
+              </article>
+            </div>
+          </div>
+          <div class="nav-footer">
+            <button class="nav-button" type="button" data-section-link="sec0">Back to course</button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer>
+      <p>Copyright 2026 <strong>Karthik sri datta</strong>. Built for Salesforce testing automation learners.</p>
+    </footer>
+
+    <script>
+const sections = Array.from(document.querySelectorAll(".content-section"));
+const sectionButtons = Array.from(document.querySelectorAll("[data-section-link]"));
+const progressFill = document.querySelector("#progressFill");
+const progressLabel = document.querySelector("#progressLabel");
+const scoreDisplay = document.querySelector("#scoreDisplay");
+const resetQuizButton = document.querySelector("#resetQuiz");
+
+const visitedSections = new Set(["sec0"]);
+let correctAnswers = 0;
+let answeredQuestions = 0;
+
+const setActiveSection = (sectionId) => {
+  sections.forEach((section) => {
+    section.classList.toggle("is-active", section.id === sectionId);
+  });
+
+  sectionButtons.forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.sectionLink === sectionId);
+  });
+
+  visitedSections.add(sectionId);
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
+const updateProgress = () => {
+  const total = sections.length;
+  const opened = visitedSections.size;
+  const percentage = Math.round((opened / total) * 100);
+
+  progressFill.style.width = `${percentage}%`;
+  progressLabel.textContent = `${opened} / ${total} sections opened`;
+};
+
+const updateScore = () => {
+  scoreDisplay.textContent = `Score: ${correctAnswers} / ${answeredQuestions}`;
+};
+
+sectionButtons.forEach((button) => {
+  button.addEventListener("click", (event) => {
+    event.preventDefault();
+    setActiveSection(button.dataset.sectionLink);
+  });
+});
+
+document.querySelectorAll("[data-copy-code]").forEach((button) => {
+  button.addEventListener("click", async () => {
+    const code = button.closest(".code-block").querySelector("code").innerText;
+
+    try {
+      await navigator.clipboard.writeText(code);
+      button.textContent = "Copied";
+      setTimeout(() => {
+        button.textContent = "Copy";
+      }, 1400);
+    } catch {
+      button.textContent = "Select code";
+    }
+  });
+});
+
+document.querySelectorAll("[data-answer]").forEach((button) => {
+  button.addEventListener("click", () => {
+    const question = button.closest(".quiz-question");
+    const choices = Array.from(question.querySelectorAll("[data-answer]"));
+    const alreadyAnswered = choices.some(
+      (choice) => choice.classList.contains("is-correct") || choice.classList.contains("is-wrong")
+    );
+
+    if (alreadyAnswered) {
+      return;
+    }
+
+    const isCorrect = button.dataset.answer === "correct";
+    button.classList.add(isCorrect ? "is-correct" : "is-wrong");
+
+    if (!isCorrect) {
+      choices
+        .filter((choice) => choice.dataset.answer === "correct")
+        .forEach((choice) => choice.classList.add("is-correct"));
+    }
+
+    choices.forEach((choice) => {
+      choice.disabled = true;
+    });
+
+    answeredQuestions += 1;
+    if (isCorrect) {
+      correctAnswers += 1;
+    }
+    updateScore();
+  });
+});
+
+resetQuizButton.addEventListener("click", () => {
+  correctAnswers = 0;
+  answeredQuestions = 0;
+  updateScore();
+
+  document.querySelectorAll("[data-answer]").forEach((button) => {
+    button.classList.remove("is-correct", "is-wrong");
+    button.disabled = false;
+  });
+});
+
+updateProgress();
+updateScore();
+
+</script>
+  </body>
+</html>
+
